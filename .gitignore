@@ -1,0 +1,60 @@
+# Visual Studio temporary files
+.vs/
+*.VC.db
+*.VC.opendb
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build folders
+Debug/
+Release/
+x64/
+x86/
+bin/
+obj/
+out/
+
+# CMake build folders
+build/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+compile_commands.json
+
+# Visual C++ generated files
+*.obj
+*.pch
+*.pdb
+*.ilk
+*.idb
+*.ipdb
+*.iobj
+*.tlog
+*.lastbuildstate
+*.log
+
+# Executables / libraries
+*.exe
+*.dll
+*.lib
+*.exp
+
+# Test / coverage
+*.gcda
+*.gcno
+*.coverage
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+
+# OS files
+Thumbs.db
+Desktop.ini
+
+# Optional logs
+*.log
