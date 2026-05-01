@@ -107,7 +107,7 @@ Config file
 CRC protocol  
 Logging to file  
 
-Author  
+## Author  
 
 Srbislav Petrovic
 
