@@ -1,3 +1,5 @@
+# Embedded Sensor Simulator
+Current Release: v1.0
 # Architecture
 
 ## Overview
