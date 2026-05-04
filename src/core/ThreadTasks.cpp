@@ -7,6 +7,8 @@
 #include "sensor/TemperatureSensor.h"
 #include "sensor/PressureSensor.h"
 #include "sensor/HumiditySensor.h"
+#include "net/TcpServer.h"
+#include "comm/Protocol.h"
 
 void runTemperatureSensor() {
     TemperatureSensor sensor;
@@ -22,7 +24,7 @@ void runTemperatureSensor() {
             << value
             << ">";
 
-        safePrint(msg.str());
+        sendMessage(msg.str());
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
@@ -41,7 +43,7 @@ void runPressureSensor() {
             << value
             << ">";
 
-        safePrint(msg.str());
+        sendMessage(msg.str());
 
         std::this_thread::sleep_for(std::chrono::milliseconds(1500));
     }
@@ -60,7 +62,7 @@ void runHumiditySensor() {
             << value
             << ">";
 
-        safePrint(msg.str());
+        sendMessage(msg.str());
 
         std::this_thread::sleep_for(std::chrono::seconds(2));
     }

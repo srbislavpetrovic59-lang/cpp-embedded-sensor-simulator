@@ -1,8 +1,10 @@
 // Protocol.cpp
+#include "net/TcpServer.h"
 #include <iostream>
 #include <iomanip>
 #include <mutex>
 #include "core/Globals.h"
+#include "utils/TimeUtils.h"
 
 // ----------------------------------
 // Build TEMP message
@@ -39,5 +41,11 @@ static std::mutex printMutex;
 // ----------------------------------
 void sendMessage(const std::string& msg)
 {
-    safePrint(msg);
+    std::string finalMsg = getTimestamp() + msg;
+
+    if (g_tcpServer && g_tcpServer->isClientConnected())
+        g_tcpServer->sendMessage(finalMsg);
+
+    safePrint(finalMsg);
 }
+
