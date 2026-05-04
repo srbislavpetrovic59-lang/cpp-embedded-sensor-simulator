@@ -11,4 +11,4 @@ file(GLOB_RECURSE SOURCES
     src/*.cpp
 )
 
-add_executable(EmbeddedSensorSimulator ${SOURCES})
+add_executable(EmbeddedSensorSimulator ${SOURCES} "include/net/TcpServer.h" "src/net/TcpServer.cpp" "include/utils/TimeUtils.h" "src/utils/TimeUtils.cpp")
