@@ -80,14 +80,23 @@ When CTRL+C is pressed:
 ```
 
 ## Features
-Multithreaded architecture  
-Temperature / Pressure / Humidity sensors  
 Randomized realistic values  
 Thread-safe console output  
 Cross-platform (Windows / Linux)  
 Ready for UART / TCP integration  
 Example Output  
 TEMP:24.83 PRES:101.22 HUM:48.10  
+- Multithreaded sensor simulation (TEMP/PRES/HUM)
+- TCP telemetry server (port configurable)
+- Console + TCP mirror output
+- JSON config support
+- Timestamp with milliseconds
+
+## How to run
+1. Build with CMake
+2. Run app
+3. Connect:
+   telnet localhost 5555
 
 ## Technologies
 C++17  
@@ -100,14 +109,6 @@ cd build
 cmake ..  
 make  
 
-## Run
-./EmbeddedSimulator
-
-## Future Improvements
-TCP socket telemetry  
-Config file  
-CRC protocol  
-Logging to file  
 
 ## Author  
 
