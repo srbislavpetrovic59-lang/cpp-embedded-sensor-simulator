@@ -1,4 +1,4 @@
-#include <thread>
+﻿#include <thread>
 #include <chrono>
 #include <sstream>
 #include <iomanip>
@@ -9,26 +9,41 @@
 #include "sensor/HumiditySensor.h"
 #include "net/TcpServer.h"
 #include "comm/Protocol.h"
+#include "config/Config.h"
+#include "protocol/BinaryProtocol.h"
+#include <iostream>
 
-void runTemperatureSensor() {
+void debugPrint(const std::vector<uint8_t>& data)
+{
+    for (auto b : data)
+        std::cout << std::hex << std::setw(2)
+        << std::setfill('0') << (int)b << " ";
+
+    std::cout << std::dec << std::endl;
+}
+
+void runTemperatureSensor()
+{
     TemperatureSensor sensor;
 
     while (running)
     {
         float value = sensor.read();
 
-        std::ostringstream msg;
-        msg << "<TEMP:"
-            << std::fixed
-            << std::setprecision(2)
-            << value
-            << ">";
+        auto packet = buildPacket(PacketType::Temperature, value);
 
-        sendMessage(msg.str());
+        if (g_tcpServer)
+            g_tcpServer->sendBinary(packet);
+        std::cout << "TEMP: " << value << std::endl;
 
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::this_thread::sleep_for(
+            std::chrono::milliseconds(g_config.tempIntervalMs));
+        for (auto b : packet)
+            printf("%02X ", b);
+        printf("\n");
     }
 }
+
 void runPressureSensor() {
     PressureSensor sensor;
 
@@ -36,16 +51,13 @@ void runPressureSensor() {
     {
         float value = sensor.read();
 
-        std::ostringstream msg;
-        msg << "<PRES:"
-            << std::fixed
-            << std::setprecision(2)
-            << value
-            << ">";
-
-        sendMessage(msg.str());
-
+        auto packet = buildPacket(PacketType::Pressure, value);
+        g_tcpServer->sendBinary(packet);
+        std::cout << "PRES: " << value << std::endl;
         std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+        for (auto b : packet)
+            printf("%02X ", b);
+        printf("\n");
     }
 }
 void runHumiditySensor() {
@@ -55,15 +67,14 @@ void runHumiditySensor() {
     {
         float value = sensor.read();
 
-        std::ostringstream msg;
-        msg << "<HUM:"
-            << std::fixed
-            << std::setprecision(2)
-            << value
-            << ">";
+        auto packet = buildPacket(PacketType::Humidity, value);
+        g_tcpServer->sendBinary(packet);
 
-        sendMessage(msg.str());
-
+        std::cout << "HUM:  " << value << std::endl;
         std::this_thread::sleep_for(std::chrono::seconds(2));
+        for (auto b : packet)
+            printf("%02X ", b);
+        printf("\n");
     }
 }
+

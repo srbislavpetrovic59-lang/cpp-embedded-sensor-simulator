@@ -3,5 +3,5 @@
 
 float HumiditySensor::read()
 {
-    return randomFloat(45.0f, 55.0f);
+    return randomFloat(45.0f, 80.0f);
 }

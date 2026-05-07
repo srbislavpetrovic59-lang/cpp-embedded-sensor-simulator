@@ -3,5 +3,5 @@
 
 float TemperatureSensor::read()
 {
-    return randomFloat(24.0f, 26.0f);
+    return randomFloat(24.0f, 35.0f);
 }

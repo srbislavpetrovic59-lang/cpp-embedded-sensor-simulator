@@ -2,6 +2,7 @@
 
 #include <string>
 #include <mutex>
+#include <vector>
 
 #ifdef _WIN32
 #include <winsock2.h>
@@ -23,6 +24,8 @@ public:
     bool isClientConnected() const;
 
     void sendMessage(const std::string& message);
+    
+    void sendBinary(const std::vector<uint8_t>& data);
 
 private:
     bool initializeSockets();

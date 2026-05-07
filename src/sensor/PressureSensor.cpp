@@ -4,5 +4,5 @@
 
 float PressureSensor::read()
 {
-    return randomFloat(100.8f, 101.8f);
+    return randomFloat(100.8f, 103.8f);
 }

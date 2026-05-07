@@ -48,6 +48,27 @@ bool TcpServer::isClientConnected() const
     return clientConnected;
 }
 
+void TcpServer::sendBinary(const std::vector<uint8_t>& data)
+{
+    std::lock_guard<std::mutex> lock(socketMutex);
+
+    if (!clientConnected)
+        return;
+
+    int result = send(
+        clientSocket,
+        reinterpret_cast<const char*>(data.data()),
+        static_cast<int>(data.size()),
+        0
+    );
+
+    if (result == SOCKET_ERROR)
+    {
+        std::cout << "Client disconnected." << std::endl;
+        closeClient();
+    }
+}
+
 void TcpServer::sendMessage(const std::string& message)
 {
     std::lock_guard<std::mutex> lock(socketMutex);

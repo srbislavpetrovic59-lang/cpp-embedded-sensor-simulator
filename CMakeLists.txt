@@ -3,12 +3,21 @@ cmake_minimum_required(VERSION 3.15)
 project(EmbeddedSensorSimulator)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include_directories(include)
 
-file(GLOB_RECURSE SOURCES
+# Server (bez client main)
+file(GLOB_RECURSE SERVER_SOURCES
     src/*.cpp
 )
 
-add_executable(EmbeddedSensorSimulator ${SOURCES} "include/net/TcpServer.h" "src/net/TcpServer.cpp" "include/utils/TimeUtils.h" "src/utils/TimeUtils.cpp")
+list(FILTER SERVER_SOURCES EXCLUDE REGEX "src/client/.*")
+
+add_executable(ServerApp ${SERVER_SOURCES} "include/client/CsvLogger.h" "src/client/CsvLogger.cpp" "src/client/AlarmSystem.cpp" "include/client/AlarmSystem.h")
+
+# Client
+add_executable(ClientApp    
+    src/client/main.cpp
+    src/protocol/BinaryProtocol.cpp
+    src/protocol/StreamParser.cpp
+ "include/client/CsvLogger.h" "src/client/CsvLogger.cpp" "src/client/AlarmSystem.cpp" "include/client/AlarmSystem.h")

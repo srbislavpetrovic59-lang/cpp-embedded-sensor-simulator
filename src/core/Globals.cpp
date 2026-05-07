@@ -4,6 +4,7 @@
 #include <iostream>
 #include <csignal>
 #include <mutex>
+#include "config/Config.h"
 
 
 // Define the global variable with type and storage specifier
@@ -11,6 +12,8 @@ std::atomic<bool> running{ true };
 
 std::mutex coutMutex;
 TcpServer* g_tcpServer = nullptr;
+
+Config g_config;
 
 // thread-safe print
 void safePrint(const std::string& msg)

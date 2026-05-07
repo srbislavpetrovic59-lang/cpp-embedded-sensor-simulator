@@ -1,33 +1,71 @@
-#include <iostream>
+﻿#include <iostream>
 #include <thread>
-#include <csignal>
 
-#include "net/TcpServer.h"
 #include "core/Globals.h"
+#include "net/TcpServer.h"
 #include "core/ThreadTasks.h"
+#include "config/Config.h"
+#include "protocol/StreamParser.h"
+#include "protocol/BinaryProtocol.h"
+
+
+void testStreamParser()
+{
+    StreamParser parser;
+    ParsedPacket parsed;
+
+    // napravi jedan paket
+    auto packet = buildPacket(PacketType::Temperature, 25.5f);
+
+    // simuliraj byte-by-byte prijem
+    for (uint8_t b : packet)
+    {
+        if (parser.inputByte(b, parsed))
+        {
+            std::cout << "Parsed: " << parsed.value << std::endl;
+        }
+    }
+}
+
+
 
 int main()
 {
+    safePrint("Embedded Sensor Simulator v2.0");
+
+    // učitaj config
+    if (!loadConfig("config.json", g_config))
+    {
+        safePrint("Config not found, using defaults");
+    }
+    testStreamParser();
+    // TCP server
     TcpServer server;
     g_tcpServer = &server;
 
-    server.start(5555);
+    if (!server.start(g_config.port))
+    {
+        safePrint("Failed to start TCP server");
+        return -1;
+    }
 
-    std::signal(SIGINT, signalHandler);
+    // pokreni threadove senzora
+    std::thread t1(runTemperatureSensor);
+    std::thread t2(runPressureSensor);
+    std::thread t3(runHumiditySensor);
 
-    safePrint("Embedded Sensor Simulator v1.0");
-    safePrint("Embedded Sensor Simulator Started");
-    safePrint("--------------------------------");
+    // čekaj exit (Ctrl+C ili ENTER)
+    std::cin.get();
 
-    std::thread tempThread(runTemperatureSensor);
-    std::thread pressureThread(runPressureSensor);
-    std::thread humidityThread(runHumiditySensor);
+    running = false;
 
-    tempThread.join();
-    pressureThread.join();
-    humidityThread.join();
+    t1.join();
+    t2.join();
+    t3.join();
 
-    safePrint("Simulator stopped.");
+    server.stop();
+
+    safePrint("Shutting down...");
 
     return 0;
 }
