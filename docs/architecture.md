@@ -41,37 +41,13 @@ When CTRL+C is pressed:
 ## High Level Diagram
 
 ```text
-                 +------------------+
-                 |      main.cpp    |
-                 | starts threads   |
-                 +--------+---------+
-                          |
-      ---------------------------------------------
-      |                    |                      |
-      v                    v                      v
-
-+-------------+     +-------------+      +-------------+
-| Temp Thread |     | PressThread |      | Hum Thread  |
-+------+------+     +------+------+      +------+------+
-       |                   |                    |
-       v                   v                    v
-
-+-------------+     +-------------+      +-------------+
-| TempSensor  |     | PressSensor |      | HumSensor   |
-+------+------+     +------+------+      +------+------+
-       |                   |                    |
-       ------------------------------------------
-                          |
-                          v
-
-                 +------------------+
-                 |   Protocol.cpp   |
-                 | build messages   |
-                 +--------+---------+
-                          |
-                          v
-
-                 +------------------+
-                 |  sendMessage()   |
-                 | Console output   |
-                 +------------------+
+Sensors
+   ↓
+TCP Server
+   ↓
+Binary Protocol
+   ↓
+REST API
+   ↓
+Web Dashboard
+```
