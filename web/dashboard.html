@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>Telemetry Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #1e1e1e;
+            color: white;
+            padding: 30px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .card {
+            background: #2d2d2d;
+            padding: 20px;
+            border-radius: 10px;
+            width: 220px;
+            text-align: center;
+        }
+
+        .value {
+            font-size: 42px;
+            margin-top: 10px;
+        }
+
+        .alarm {
+            border: 3px solid red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Embedded Telemetry Dashboard</h1>
+
+    <div class="container">
+
+        <div class="card" id="tempCard">
+            <h2>Temperature</h2>
+            <div class="value" id="temp">--</div>
+        </div>
+
+        <div class="card" id="presCard">
+            <h2>Pressure</h2>
+            <div class="value" id="pres">--</div>
+        </div>
+
+        <div class="card" id="humCard">
+            <h2>Humidity</h2>
+            <div class="value" id="hum">--</div>
+        </div>
+
+    </div>
+
+    <script>
+
+        async function updateData()
+        {
+            try
+            {
+                const response =
+                    await fetch("http://127.0.0.1:8080/latest");
+
+                const data = await response.json();
+                console.log(data);
+
+                document.getElementById("temp").innerText =
+                    data.temperature.toFixed(2);
+
+                document.getElementById("pres").innerText =
+                    data.pressure.toFixed(2);
+
+                document.getElementById("hum").innerText =
+                    data.humidity.toFixed(2);
+
+                // alarms
+
+                document.getElementById("tempCard")
+                    .classList.toggle(
+                        "alarm",
+                        data.temperature > 30
+                    );
+
+                document.getElementById("presCard")
+                    .classList.toggle(
+                        "alarm",
+                        data.pressure > 1020
+                    );
+
+                document.getElementById("humCard")
+                    .classList.toggle(
+                        "alarm",
+                        data.humidity > 70
+                    );
+            }
+            catch (err)
+            {
+                console.log(err);
+            }
+        }
+
+        setInterval(updateData, 1000);
+
+        updateData();
+
+    </script>
+
+</body>
+
+</html>

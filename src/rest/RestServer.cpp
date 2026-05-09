@@ -15,6 +15,10 @@ void RestServer::start(int port)
         [](const httplib::Request&,
             httplib::Response& res)
         {
+            res.set_header(
+                "Access-Control-Allow-Origin",
+                "*"
+            );
             res.set_content(
                 "REST server running",
                 "text/plain"
@@ -25,6 +29,10 @@ void RestServer::start(int port)
         [](const httplib::Request&,
             httplib::Response& res)
         {
+            res.set_header(
+                "Access-Control-Allow-Origin",
+                "*"
+            );
             std::ostringstream json;
 
             json << "{";
