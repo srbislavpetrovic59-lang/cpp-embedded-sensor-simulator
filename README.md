@@ -191,6 +191,11 @@ python plot.py
 - [ ] Unreal Engine visualization
 - [ ] Authentication
 - [ ] Docker deployment 
+
+## Dashboard
+![Dashboard](docs/Screenshot 2026-05-09 222017.png)‎
+
+
 ## Author  
 
 Srbislav Petrovic
