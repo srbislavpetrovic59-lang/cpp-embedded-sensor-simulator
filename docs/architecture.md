@@ -1,16 +1,9 @@
 # Architecture
 
 ## Overview
+Multi-threaded embedded telemetry simulator written in modern C++.
 
-Embedded Sensor Simulator is a C++ console application that simulates a real embedded device sending live telemetry data from multiple sensors.
-
-The project is structured in independent modules:
-
-- **Sensors** → generate realistic values
-- **ThreadTasks** → run each sensor in its own thread
-- **Protocol** → formats messages
-- **Globals** → shared state (mutex, running flag)
-- **Output Layer** → console now, UART/TCP later
+The project simulates real-time sensor devices, streams binary telemetry data over TCP, supports multiple monitoring clients, logs telemetry to CSV, exposes a REST API, and provides live visualization using Python.
 
 ---
 
