@@ -22,7 +22,7 @@ The project simulates real-time sensor devices, streams binary telemetry data ov
 
 ## Binary Protocol
 
-# Custom lightweight binary protocol:
+Custom lightweight binary protocol:
 
 - Packet header
 - Packet type
@@ -41,23 +41,22 @@ Client application supports:
 ## Alarm System
 
 Threshold-based warnings:
-
 - High temperature
 - High pressure
 - High humidity
 
 ## REST API
 HTTP API for latest sensor values.
-# Endpoints
-# Status
+**Endpoints**
+**Status**
 GET /status
-# Response:
+**Response:**
 REST server running
 
-# Latest Sensor Values
+**Latest Sensor Values**
 GET /latest
 
-# Example response:
+**Example response:**
 ```text
 {
   "temperature": 24.8,
@@ -130,34 +129,6 @@ EmbeddedSensorSimulator/
 ├── README.md
 └── .gitignore
 ```
-
-
-
-## Build
-
-- Requirements
-- Visual Studio 2022
-- CMake
-- Python 3.x
-
-## Build Steps
-git clone <repo_url>
-cd EmbeddedSensorSimulator
-
-Open project in Visual Studio and build using CMake.
-
-## Running
-## Start Server
-
-- Run:
-
-   - ServerApp.exe
-   - Start Client
-
-## Run one or more:
-
-ClientApp.exe
-
 ## Technologies
 - C++17
 - WinSock2
@@ -168,6 +139,34 @@ ClientApp.exe
 - JSON
 - Python
 - matplotlib
+## Build
+
+**Requirements**
+- Visual Studio 2022
+- CMake
+- Python 3.x
+
+**Build Steps**
+```text
+git clone <repo_url>
+cd EmbeddedSensorSimulator
+```
+Open project in Visual Studio and build using CMake.
+
+## Running
+**Start Server**
+
+Run:
+```text
+   - ServerApp.exe
+   - Start Client
+```
+## Start Client
+
+**Run one or more:**
+ClientApp.exe
+
+
 
 ## REST API
 Open browser:
@@ -177,13 +176,13 @@ http://localhost:8080/latest
 
 ## Python Live Graph
 python plot.py
+<img width="637" height="552" alt="image" src="https://github.com/user-attachments/assets/1d315187-eb50-4846-87f5-643f62c3b46e" />
+
 
 ## Example Console Output
 - TEMP: 24.81
 - PRES: 1013.2
 - HUM: 45.3
-
-
 
 ## Future Improvements
 ```text
