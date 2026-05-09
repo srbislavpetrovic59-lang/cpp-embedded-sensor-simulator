@@ -185,7 +185,7 @@ python plot.py
 - HUM: 45.3
 
 ## Future Improvements
-- [ ] Web dashboard
+- [x] Web dashboard
 - [ ] SQLite telemetry storage
 - [ ] WebSocket streaming
 - [ ] Unreal Engine visualization
