@@ -1,43 +1,69 @@
 # Embedded Sensor Simulator
-Current Release: v1.0
+Current Release: v3.0
 # Architecture
+Multi-threaded embedded telemetry simulator written in modern C++.
 
-## Overview
+The project simulates real-time sensor devices, streams binary telemetry data over TCP, supports multiple monitoring clients, logs telemetry to CSV, exposes a REST API, and provides live visualization using Python. 
 
-Embedded Sensor Simulator is a C++ console application that simulates a real embedded device sending live telemetry data from multiple sensors.
+## Features
+# Embedded Sensor Simulation
 
-The project is structured in independent modules:
+- Temperature sensor
+- Pressure sensor
+- Humidity sensor
+- Configurable update intervals
 
-- **Sensors** → generate realistic values
-- **ThreadTasks** → run each sensor in its own thread
-- **Protocol** → formats messages
-- **Globals** → shared state (mutex, running flag)
-- **Output Layer** → console now, UART/TCP later
+## TCP Networking
 
----
+- TCP telemetry server
+- Multi-client support
+- Real-time binary streaming
+- Concurrent client handling
 
-## Runtime Flow
+## Binary Protocol
 
-When the application starts:
+Custom lightweight binary protocol:
 
-1. `main.cpp` initializes the system
-2. CTRL+C signal handler is registered
-3. Three worker threads are started:
-   - Temperature thread
-   - Pressure thread
-   - Humidity thread
-4. Each thread continuously:
-   - reads sensor value
-   - builds protocol message
-   - sends output
-   - waits configured interval
+- Packet header
+- Packet type
+- Float payload
+- Stream parser
+- TCP-safe packet reconstruction
+## Monitoring Client
 
-When CTRL+C is pressed:
+Client application supports:
 
-1. `running = false`
-2. all threads exit loop
-3. application shuts down cleanly
+- Real-time packet decoding
+- Live telemetry monitoring
+- CSV logging
+- Alarm system
 
+## Alarm System
+
+Threshold-based warnings:
+- High temperature
+- High pressure
+- High humidity
+
+## REST API
+HTTP API for latest sensor values.
+**Endpoints**
+**Status**
+GET /status
+**Response:**
+REST server running
+
+**Latest Sensor Values**
+GET /latest
+
+**Example response:**
+```text
+{
+  "temperature": 24.8,
+  "pressure": 1013.2,
+  "humidity": 45.1
+}
+```
 ---
 
 ## High Level Diagram
@@ -77,40 +103,99 @@ When CTRL+C is pressed:
                  | Console output   |
                  +------------------+
 
+
 ```
-
-## Features
-Randomized realistic values  
-Thread-safe console output  
-Cross-platform (Windows / Linux)  
-Ready for UART / TCP integration  
-Example Output  
-TEMP:24.83 PRES:101.22 HUM:48.10  
-- Multithreaded sensor simulation (TEMP/PRES/HUM)
-- TCP telemetry server (port configurable)
-- Console + TCP mirror output
-- JSON config support
-- Timestamp with milliseconds
-
-## How to run
-1. Build with CMake
-2. Run app
-3. Connect:
-   telnet localhost 5555
-
+## Project Structure
+```text
+EmbeddedSensorSimulator/
+│
+├── include/
+│   ├── protocol/
+│   ├── network/
+│   ├── client/
+│   └── rest/
+│
+├── src/
+│   ├── protocol/
+│   ├── network/
+│   ├── sensor/
+│   ├── client/
+│   └── rest/
+│
+├── third_party/
+│
+├── config.json
+├── CMakeLists.txt
+├── README.md
+└── .gitignore
+```
 ## Technologies
-C++17  
-std::thread  
-mutex  
-chrono  
-Build  
-mkdir build  
-cd build  
-cmake ..  
-make  
+- C++17
+- WinSock2
+- CMake
+- Multi-threading
+- TCP/IP
+- REST API
+- JSON
+- Python
+- matplotlib
+## Build
+
+**Requirements**
+- Visual Studio 2022
+- CMake
+- Python 3.x
+
+**Build Steps**
+```text
+git clone <repo_url>
+cd EmbeddedSensorSimulator
+```
+Open project in Visual Studio and build using CMake.
+
+## Running
+**Start Server**
+
+Run:
+```text
+   - ServerApp.exe
+   - Start Client
+```
+## Start Client
+
+**Run one or more:**
+ClientApp.exe
 
 
+
+## REST API
+Open browser:
+
+http://localhost:8080/status
+http://localhost:8080/latest
+
+## Python Live Graph
+python plot.py
+<img width="637" height="552" alt="image" src="https://github.com/user-attachments/assets/1d315187-eb50-4846-87f5-643f62c3b46e" />
+
+
+## Example Console Output
+- TEMP: 24.81
+- PRES: 1013.2
+- HUM: 45.3
+
+## Future Improvements
+- [ ] Web dashboard
+- [ ] SQLite telemetry storage
+- [ ] WebSocket streaming
+- [ ] Unreal Engine visualization
+- [ ] Authentication
+- [ ] Docker deployment 
 ## Author  
 
 Srbislav Petrovic
+
+## License
+
+MIT License
 
