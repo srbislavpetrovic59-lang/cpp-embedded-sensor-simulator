@@ -1,12 +1,17 @@
 #include <iostream>
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#include <thread>
 
 #pragma comment(lib, "ws2_32.lib")
 
 #include "protocol/StreamParser.h"
 #include "client/CsvLogger.h"
 #include "client/AlarmSystem.h"
+#include "rest/SensorData.h"
+#include "rest/RestServer.h"
+
+ 
 
 void printPacket(const ParsedPacket& packet)
 {
@@ -80,6 +85,15 @@ int main()
 
     std::cout << "Connected!\n";
 
+    RestServer rest;
+
+    std::thread restThread(
+        [&rest]()
+        {
+            rest.start(8080);
+        });
+    restThread.detach();
+
     StreamParser parser;
     ParsedPacket parsed;
 
@@ -119,14 +133,17 @@ int main()
                 switch (parsed.type)
                 {
                 case PacketType::Temperature:
+                    g_sensorData.temperature = parsed.value;
                     alarm.checkTemperature(parsed.value);
                     break;
 
                 case PacketType::Pressure:
+                    g_sensorData.pressure = parsed.value;
                     alarm.checkPressure(parsed.value);
                     break;
 
                 case PacketType::Humidity:
+                    g_sensorData.humidity = parsed.value;
                     alarm.checkHumidity(parsed.value);
                     break;
 

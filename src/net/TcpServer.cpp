@@ -3,6 +3,8 @@
 #include <iostream>
 #include <thread>
 
+#pragma comment(lib, "ws2_32.lib")
+
 TcpServer::TcpServer()
     : listenSocket(INVALID_SOCKET),
     clientSocket(INVALID_SOCKET),
@@ -18,17 +20,37 @@ TcpServer::~TcpServer()
 
 bool TcpServer::start(int port)
 {
-    if (!initializeSockets())
+    WSADATA wsa;
+
+    WSAStartup(MAKEWORD(2, 2), &wsa);
+
+    serverSocket =
+        socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+    if (serverSocket == INVALID_SOCKET)
         return false;
 
-    if (!createListenSocket(port))
+    sockaddr_in server{};
+    server.sin_family = AF_INET;
+    server.sin_port = htons(port);
+    server.sin_addr.s_addr = INADDR_ANY;
+
+    if (bind(serverSocket,
+        (sockaddr*)&server,
+        sizeof(server)) == SOCKET_ERROR)
+    {
         return false;
+    }
 
-    running = true;
+    listen(serverSocket, SOMAXCONN);
 
-    std::cout << "Listening on port " << port << std::endl;
+    std::cout << "Listening on port "
+        << port << std::endl;
 
-    std::thread(&TcpServer::acceptLoop, this).detach();
+    std::thread(
+        &TcpServer::acceptLoop,
+        this
+    ).detach();
 
     return true;
 }
@@ -48,26 +70,6 @@ bool TcpServer::isClientConnected() const
     return clientConnected;
 }
 
-void TcpServer::sendBinary(const std::vector<uint8_t>& data)
-{
-    std::lock_guard<std::mutex> lock(socketMutex);
-
-    if (!clientConnected)
-        return;
-
-    int result = send(
-        clientSocket,
-        reinterpret_cast<const char*>(data.data()),
-        static_cast<int>(data.size()),
-        0
-    );
-
-    if (result == SOCKET_ERROR)
-    {
-        std::cout << "Client disconnected." << std::endl;
-        closeClient();
-    }
-}
 
 void TcpServer::sendMessage(const std::string& message)
 {
@@ -132,15 +134,23 @@ bool TcpServer::createListenSocket(int port)
 
 void TcpServer::acceptLoop()
 {
-    while (running)
+    while (true)
     {
-        if (!clientConnected)
-        {
-            acceptClient();
-        }
+        SOCKET client =
+            accept(serverSocket, nullptr, nullptr);
 
-        std::this_thread::sleep_for(
-            std::chrono::milliseconds(200));
+        if (client != INVALID_SOCKET)
+        {
+            std::lock_guard<std::mutex>
+                lock(clientMutex);
+
+            clients.push_back(client);
+
+            std::cout
+                << "Client connected. Total: "
+                << clients.size()
+                << std::endl;
+        }
     }
 }
 
@@ -175,5 +185,39 @@ void TcpServer::closeServer()
     {
         closesocket(listenSocket);
         listenSocket = INVALID_SOCKET;
+    }
+}
+
+void TcpServer::sendBinary(
+    const std::vector<uint8_t>& data)
+{
+    std::lock_guard<std::mutex>
+        lock(clientMutex);
+
+    for (auto it = clients.begin();
+        it != clients.end();)
+    {
+        int result = send(
+            *it,
+            reinterpret_cast<const char*>(data.data()),
+            static_cast<int>(data.size()),
+            0
+        );
+
+        if (result == SOCKET_ERROR)
+        {
+            closesocket(*it);
+
+            it = clients.erase(it);
+
+            std::cout
+                << "Client disconnected. Total: "
+                << clients.size()
+                << std::endl;
+        }
+        else
+        {
+            ++it;
+        }
     }
 }

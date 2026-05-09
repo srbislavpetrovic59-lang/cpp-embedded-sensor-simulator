@@ -1,14 +1,6 @@
-<<<<<<< Updated upstream
 {
   "port": 5555,
   "temp_interval_ms": 1000,
   "pressure_interval_ms": 1500,
   "humidity_interval_ms": 2000
-=======
-{
-  "port": 5555,
-  "temp_interval_ms": 1000,
-  "pressure_interval_ms": 1500,
-  "humidity_interval_ms": 2000
->>>>>>> Stashed changes
 }

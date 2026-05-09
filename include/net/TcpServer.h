@@ -19,7 +19,7 @@ public:
     bool start(int port);
     void stop();
 
-    void acceptLoop();
+   
 
     bool isClientConnected() const;
 
@@ -37,6 +37,7 @@ private:
     void closeClient();
     void closeServer();
 
+    void acceptLoop();
 private:
 #ifdef _WIN32
     SOCKET listenSocket;
@@ -45,6 +46,11 @@ private:
     int listenSocket;
     int clientSocket;
 #endif
+    SOCKET serverSocket = INVALID_SOCKET;
+
+    std::vector<SOCKET> clients;
+
+    std::mutex clientMutex;
 
     bool running;
     bool clientConnected;
