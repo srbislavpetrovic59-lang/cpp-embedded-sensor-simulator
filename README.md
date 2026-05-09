@@ -46,17 +46,14 @@ Threshold-based warnings:
 - High pressure
 - High humidity
 
-# REST API
-
+## REST API
 HTTP API for latest sensor values.
-
 # Endpoints
 # Status
 GET /status
-
 # Response:
-
 REST server running
+
 # Latest Sensor Values
 GET /latest
 
