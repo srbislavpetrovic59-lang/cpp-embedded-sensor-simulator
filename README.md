@@ -185,14 +185,12 @@ python plot.py
 - HUM: 45.3
 
 ## Future Improvements
-```text
-Web dashboard
-SQLite telemetry storage
-WebSocket streaming
-Unreal Engine visualization
-Authentication
-Docker deployment 
-```
+- [ ] Web dashboard
+- [ ] SQLite telemetry storage
+- [ ] WebSocket streaming
+- [ ] Unreal Engine visualization
+- [ ] Authentication
+- [ ] Docker deployment 
 ## Author  
 
 Srbislav Petrovic
