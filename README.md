@@ -129,7 +129,9 @@ Run:
 **Run one or more:**
 ClientApp.exe
 
-
+## Bash
+- python -m http.server 3000
+- http://localhost:3000/dashboard.html
 
 ## REST API
 Open browser:
