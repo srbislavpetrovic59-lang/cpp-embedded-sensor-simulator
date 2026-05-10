@@ -1,12 +1,15 @@
 # Embedded Sensor Simulator
-Current Release: v3.0
-# Architecture
+Current Release: v4.0
+## Architecture
 Multi-threaded embedded telemetry simulator written in modern C++.
 
 The project simulates real-time sensor devices, streams binary telemetry data over TCP, supports multiple monitoring clients, logs telemetry to CSV, exposes a REST API, and provides live visualization using Python. 
 
-## Features
-# Embedded Sensor Simulation
+![Architecture](docs/architecture.png)
+
+
+# Features
+## Embedded Sensor Simulation
 
 - Temperature sensor
 - Pressure sensor
@@ -65,46 +68,6 @@ GET /latest
 }
 ```
 ---
-
-## High Level Diagram
-```text
-                 +------------------+
-                 |      main.cpp    |
-                 | starts threads   |
-                 +--------+---------+
-                          |
-      ---------------------------------------------
-      |                    |                      |
-      v                    v                      v
-
-+-------------+     +-------------+      +-------------+
-| Temp Thread |     | PressThread |      | Hum Thread  |
-+------+------+     +------+------+      +------+------+
-       |                   |                    |
-       v                   v                    v
-
-+-------------+     +-------------+      +-------------+
-| TempSensor  |     | PressSensor |      | HumSensor   |
-+------+------+     +------+------+      +------+------+
-       |                   |                    |
-       ------------------------------------------
-                          |
-                          v
-
-                 +------------------+
-                 |   Protocol.cpp   |
-                 | build messages   |
-                 +--------+---------+
-                          |
-                          v
-
-                 +------------------+
-                 |  sendMessage()   |
-                 | Console output   |
-                 +------------------+
-
-
-```
 ## Project Structure
 ```text
 EmbeddedSensorSimulator/
@@ -171,8 +134,8 @@ ClientApp.exe
 ## REST API
 Open browser:
 
-http://localhost:8080/status
-http://localhost:8080/latest
+- http://localhost:8080/status
+- http://localhost:8080/latest
 
 ## Python Live Graph
 python plot.py
@@ -193,7 +156,7 @@ python plot.py
 - [ ] Docker deployment 
 
 ## Dashboard
-![Dashboard](docs/Screenshot 2026-05-09 222017.png)‎
+![Dashboard](docs/dashboard.png)‎
 
 
 ## Author  
