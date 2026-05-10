@@ -6,6 +6,22 @@ set(CMAKE_CXX_STANDARD 17)
 
 include_directories(include)
 
+
+# Client
+add_executable(ClientApp    
+    src/client/main.cpp
+    src/protocol/BinaryProtocol.cpp
+    src/protocol/StreamParser.cpp
+    src/database/TelemetryDatabase.cpp
+ "include/client/CsvLogger.h" "src/client/CsvLogger.cpp" "src/client/AlarmSystem.cpp" "include/client/AlarmSystem.h" "include/rest/SensorData.h" "src/rest/SensorData.cpp"
+ "include/rest/RestServer.h" "src/rest/RestServer.cpp"  "third_party/sqlite/sqlite3.c" "third_party/sqlite/sqlite3.h" )
+
+
+target_include_directories(ClientApp PRIVATE
+    third_party
+)
+
+
 # Server (bez client main)
 file(GLOB_RECURSE SERVER_SOURCES
     src/*.cpp
@@ -13,11 +29,17 @@ file(GLOB_RECURSE SERVER_SOURCES
 
 list(FILTER SERVER_SOURCES EXCLUDE REGEX "src/client/.*")
 
-add_executable(ServerApp ${SERVER_SOURCES} "include/client/CsvLogger.h" "src/client/CsvLogger.cpp" "src/client/AlarmSystem.cpp" "include/client/AlarmSystem.h" "include/rest/SensorData.h" "src/rest/SensorData.cpp" "include/rest/RestServer.h" "src/rest/RestServer.cpp")
+add_executable(ServerApp ${SERVER_SOURCES} "include/client/CsvLogger.h"
+    "src/client/CsvLogger.cpp"
+    "src/client/AlarmSystem.cpp"
+    "include/client/AlarmSystem.h"
+    "include/rest/SensorData.h"
+    "src/rest/SensorData.cpp"
+    "include/rest/RestServer.h"
+    "src/rest/RestServer.cpp"
+    "src/database/TelemetryDatabase.cpp" "third_party/sqlite/sqlite3.c")
 
-# Client
-add_executable(ClientApp    
-    src/client/main.cpp
-    src/protocol/BinaryProtocol.cpp
-    src/protocol/StreamParser.cpp
- "include/client/CsvLogger.h" "src/client/CsvLogger.cpp" "src/client/AlarmSystem.cpp" "include/client/AlarmSystem.h" "include/rest/SensorData.h" "src/rest/SensorData.cpp" "include/rest/RestServer.h" "src/rest/RestServer.cpp")
+target_include_directories(ServerApp PRIVATE
+    include
+    third_party
+)

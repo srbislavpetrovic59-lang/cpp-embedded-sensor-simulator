@@ -8,6 +8,8 @@
 #include "protocol/StreamParser.h"
 #include "protocol/BinaryProtocol.h"
 
+#include "database/TelemetryDatabase.h"
+
 
 void testStreamParser()
 {
@@ -48,6 +50,7 @@ int main()
         safePrint("Failed to start TCP server");
         return -1;
     }
+	
 
     // pokreni threadove senzora
     std::thread t1(runTemperatureSensor);

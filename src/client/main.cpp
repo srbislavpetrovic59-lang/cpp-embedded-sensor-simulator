@@ -10,6 +10,7 @@
 #include "client/AlarmSystem.h"
 #include "rest/SensorData.h"
 #include "rest/RestServer.h"
+#include "database/TelemetryDatabase.h"
 
  
 
@@ -102,6 +103,10 @@ int main()
     AlarmSystem alarm;
 
     char buffer[512];
+   
+    TelemetryDatabase database;
+
+    database.open("telemetry.db");
 
     while (true)
     {
@@ -135,16 +140,25 @@ int main()
                 case PacketType::Temperature:
                     g_sensorData.temperature = parsed.value;
                     alarm.checkTemperature(parsed.value);
+                    database.insert(
+                        "TEMP",
+                        parsed.value);
                     break;
 
                 case PacketType::Pressure:
                     g_sensorData.pressure = parsed.value;
                     alarm.checkPressure(parsed.value);
+                    database.insert(
+                        "PRES",
+                        parsed.value);
                     break;
 
                 case PacketType::Humidity:
                     g_sensorData.humidity = parsed.value;
                     alarm.checkHumidity(parsed.value);
+                    database.insert(
+                        "HUM",
+                        parsed.value);
                     break;
 
                 default:
