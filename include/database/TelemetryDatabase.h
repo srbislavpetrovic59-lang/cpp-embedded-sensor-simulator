@@ -4,6 +4,8 @@
 
 struct sqlite3;
 
+
+
 class TelemetryDatabase
 {
 public:
@@ -12,6 +14,10 @@ public:
     void insert(
         const std::string& type,
         float value);
+
+    std::string getLatestTelemetryJson();
+    
+    std::string getHistoryJson();
 
 private:
     sqlite3* db = nullptr;

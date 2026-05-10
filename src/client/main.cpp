@@ -87,11 +87,14 @@ int main()
     std::cout << "Connected!\n";
 
     RestServer rest;
+    
+    TelemetryDatabase database;
+    database.open("telemetry.db");
 
     std::thread restThread(
-        [&rest]()
+        [&rest, &database]()
         {
-            rest.start(8080);
+            rest.start(8080, database);
         });
     restThread.detach();
 
@@ -104,10 +107,6 @@ int main()
 
     char buffer[512];
    
-    TelemetryDatabase database;
-
-    database.open("telemetry.db");
-
     while (true)
     {
         int received = recv(sock, buffer, sizeof(buffer), 0);

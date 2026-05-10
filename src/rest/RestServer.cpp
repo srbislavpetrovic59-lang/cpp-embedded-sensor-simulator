@@ -6,8 +6,9 @@
 
 #include <iostream>
 #include <sstream>
+#include "database/TelemetryDatabase.h"
 
-void RestServer::start(int port)
+void RestServer::start(int port, TelemetryDatabase& database)
 {
     httplib::Server svr;
 
@@ -53,6 +54,23 @@ void RestServer::start(int port)
             );
         });
 
+    svr.Get("/history",
+        [&](const httplib::Request&,
+            httplib::Response& res)
+        {
+            res.set_header(
+                "Access-Control-Allow-Origin",
+                "*"
+            );
+
+            std::string json =
+                database.getHistoryJson();
+
+            res.set_content(
+                json,
+                "application/json"
+            );
+        });
     std::cout
         << "REST API listening on port "
         << port

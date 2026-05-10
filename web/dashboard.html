@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 
     <title>Telemetry Dashboard</title>
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: Arial;
@@ -50,27 +50,26 @@
 
         <div class="card" id="tempCard">
             <h2>Temperature</h2>
-            <div class="value" id="temp">--</div>
+            <div class="value"><span id="temp">--</span> °C</div>
         </div>
 
         <div class="card" id="presCard">
             <h2>Pressure</h2>
-            <div class="value" id="pres">--</div>
+            <div class="value"><span id="pres">--</span> hPa</div>
         </div>
 
         <div class="card" id="humCard">
             <h2>Humidity</h2>
-            <div class="value" id="hum">--</div>
+            <div class="value"><span id="hum">--</span> %</div>
         </div>
 
     </div>
-
+    <p id="status">Connecting...</p>
+    <canvas id="historyChart" width="900" height="300"></canvas>
     <script>
 
-        async function updateData()
-        {
-            try
-            {
+        async function updateData() {
+            try {
                 const response =
                     await fetch("http://127.0.0.1:8080/latest");
 
@@ -78,13 +77,16 @@
                 console.log(data);
 
                 document.getElementById("temp").innerText =
-                    data.temperature.toFixed(2);
+                    Number(data.temperature).toFixed(2);
 
                 document.getElementById("pres").innerText =
-                    data.pressure.toFixed(2);
+                    Number(data.pressure).toFixed(2);
 
                 document.getElementById("hum").innerText =
-                    data.humidity.toFixed(2);
+                    Number(data.humidity).toFixed(2);
+
+                document.getElementById("status").innerText =
+                    "Connected - live data";
 
                 // alarms
 
@@ -106,8 +108,9 @@
                         data.humidity > 70
                     );
             }
-            catch (err)
-            {
+            catch (err) {
+                document.getElementById("status").innerText =
+                    "Disconnected - REST server not reachable";
                 console.log(err);
             }
         }
@@ -115,6 +118,85 @@
         setInterval(updateData, 1000);
 
         updateData();
+        let historyChart;
+
+async function updateHistoryChart()
+{
+    try
+    {
+        const response =
+            await fetch("http://127.0.0.1:8080/history");
+
+        const history = await response.json();
+
+        const tempData = [];
+        const humData = [];
+        const presData = [];
+        const labels = [];
+
+        history.reverse();
+
+        history.forEach(item =>
+        {
+            labels.push(item.timestamp);
+
+            if (item.sensor === "TEMP")
+                tempData.push(item.value);
+            else
+                tempData.push(null);
+
+            if (item.sensor === "HUM")
+                humData.push(item.value);
+            else
+                humData.push(null);
+
+            if (item.sensor === "PRES")
+                presData.push(item.value);
+            else
+                presData.push(null);
+        });
+
+        const ctx =
+            document.getElementById("historyChart");
+
+        if (historyChart)
+            historyChart.destroy();
+
+        historyChart = new Chart(ctx,
+        {
+            type: "line",
+
+            data:
+            {
+                labels: labels,
+
+                datasets:
+                [
+                    {
+                        label: "Temperature",
+                        data: tempData
+                    },
+                    {
+                        label: "Pressure",
+                        data: presData
+                    },
+                    {
+                        label: "Humidity",
+                        data: humData
+                    }
+                ]
+            }
+        });
+    }
+    catch(err)
+    {
+        console.log(err);
+    }
+}
+
+updateHistoryChart();
+
+setInterval(updateHistoryChart, 5000);
 
     </script>
 

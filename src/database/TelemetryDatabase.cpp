@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <sstream>
-#include "../../third_party/sqlite/sqlite3.h"
+#include "sqlite/sqlite3.h"
 
 bool TelemetryDatabase::open(
     const std::string& filename)
@@ -68,3 +68,94 @@ void TelemetryDatabase::insert(
         nullptr,
         &errMsg);
 }
+
+std::string TelemetryDatabase::getLatestTelemetryJson()
+{
+    std::stringstream ss;
+
+    ss << "{";
+
+    sqlite3_stmt* stmt;
+
+    const char* sql =
+        "SELECT sensor_type, value "
+        "FROM telemetry "
+        "ORDER BY id DESC LIMIT 3;";
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK)
+    {
+        bool first = true;
+
+        while (sqlite3_step(stmt) == SQLITE_ROW)
+        {
+            std::string sensor =
+                reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+
+            double value = sqlite3_column_double(stmt, 1);
+
+            if (!first)
+                ss << ",";
+
+            ss << "\"" << sensor << "\":" << value;
+
+            first = false;
+        }
+    }
+
+    sqlite3_finalize(stmt);
+
+    ss << "}";
+
+    return ss.str();
+}
+
+std::string TelemetryDatabase::getHistoryJson()
+{
+    sqlite3_stmt* stmt;
+
+    std::stringstream json;
+
+    json << "[";
+
+    const char* sql =
+        "SELECT type, value, timestamp "
+        "FROM telemetry "
+        "ORDER BY id DESC LIMIT 30;";
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK)
+    {
+        bool first = true;
+
+        while (sqlite3_step(stmt) == SQLITE_ROW)
+        {
+            std::string sensor =
+                reinterpret_cast<const char*>(
+                    sqlite3_column_text(stmt, 0));
+
+            double value =
+                sqlite3_column_double(stmt, 1);
+
+            std::string timestamp =
+                reinterpret_cast<const char*>(
+                    sqlite3_column_text(stmt, 2));
+
+            if (!first)
+                json << ",";
+
+            json << "{";
+            json << "\"sensor\":\"" << sensor << "\",";
+            json << "\"value\":" << value << ",";
+            json << "\"timestamp\":\"" << timestamp << "\"";
+            json << "}";
+
+            first = false;
+        }
+    }
+
+    sqlite3_finalize(stmt);
+
+    json << "]";
+
+    return json.str();
+}
+
