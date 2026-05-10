@@ -149,7 +149,7 @@ python plot.py
 
 ## Future Improvements
 - [x] Web dashboard
-- [ ] SQLite telemetry storage
+- [x] SQLite telemetry storage
 - [ ] WebSocket streaming
 - [ ] Unreal Engine visualization
 - [ ] Authentication
@@ -158,6 +158,8 @@ python plot.py
 ## Dashboard
 ![Dashboard](docs/dashboard.png)‎
 
+## SQlite telemetry
+![Dashboard](docs/telemetry.png)‎
 
 ## Author  
 
