@@ -122,6 +122,7 @@
 
 async function updateHistoryChart()
 {
+    console.log("Chart object:", typeof Chart);
     try
     {
         const response =
@@ -174,15 +175,18 @@ async function updateHistoryChart()
                 [
                     {
                         label: "Temperature",
-                        data: tempData
+                        data: tempData,
+                        spanGaps: true
                     },
                     {
                         label: "Pressure",
-                        data: presData
+                        data: presData,
+                        spanGaps: true
                     },
                     {
                         label: "Humidity",
-                        data: humData
+                        data: humData,
+                        spanGaps: true
                     }
                 ]
             }
