@@ -158,6 +158,8 @@ python plot.py
 ## Dashboard
 ![Dashboard](docs/dashboard.png)‎
 
+## SQlite telemetry
+![Dashboard](docs/telemetry.png)‎
 
 ## Author  
 
