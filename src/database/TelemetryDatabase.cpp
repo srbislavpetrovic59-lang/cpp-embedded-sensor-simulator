@@ -50,7 +50,7 @@ void TelemetryDatabase::insert(
     const std::string& type,
     float value)
 {
-    std::ostringstream sql;
+   std::ostringstream sql;
 
     sql
         << "INSERT INTO telemetry(type, value) VALUES('"
@@ -78,7 +78,7 @@ std::string TelemetryDatabase::getLatestTelemetryJson()
     sqlite3_stmt* stmt;
 
     const char* sql =
-        "SELECT sensor_type, value "
+        "SELECT type, value "
         "FROM telemetry "
         "ORDER BY id DESC LIMIT 3;";
 

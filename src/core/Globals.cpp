@@ -8,6 +8,7 @@
 
 
 // Define the global variable with type and storage specifier
+TelemetryDatabase g_database;
 std::atomic<bool> running{ true };
 
 std::mutex coutMutex;

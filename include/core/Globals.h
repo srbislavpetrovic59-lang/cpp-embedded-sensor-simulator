@@ -4,7 +4,9 @@
 #include <mutex>
 #include <atomic>
 #include "config/Config.h"
+#include "database/TelemetryDatabase.h"
 
+extern TelemetryDatabase g_database;
 class TcpServer;
 
 // shared variables

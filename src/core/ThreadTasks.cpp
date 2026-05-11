@@ -12,6 +12,7 @@
 #include "config/Config.h"
 #include "protocol/BinaryProtocol.h"
 #include <iostream>
+#include "database/TelemetryDatabase.h"
 
 void debugPrint(const std::vector<uint8_t>& data)
 {
@@ -29,6 +30,7 @@ void runTemperatureSensor()
     while (running)
     {
         float value = sensor.read();
+        g_database.insert("TEMP", value);
 
         auto packet = buildPacket(PacketType::Temperature, value);
 
@@ -50,9 +52,10 @@ void runPressureSensor() {
     while (running)
     {
         float value = sensor.read();
-
+        g_database.insert("PRES", value);
         auto packet = buildPacket(PacketType::Pressure, value);
-        g_tcpServer->sendBinary(packet);
+        if (g_tcpServer)
+            g_tcpServer->sendBinary(packet);
         std::cout << "PRES: " << value << std::endl;
         std::this_thread::sleep_for(std::chrono::milliseconds(1500));
         for (auto b : packet)
@@ -66,9 +69,11 @@ void runHumiditySensor() {
     while (running)
     {
         float value = sensor.read();
+        g_database.insert("HUM", value);
 
         auto packet = buildPacket(PacketType::Humidity, value);
-        g_tcpServer->sendBinary(packet);
+        if (g_tcpServer)
+            g_tcpServer->sendBinary(packet);
 
         std::cout << "HUM:  " << value << std::endl;
         std::this_thread::sleep_for(std::chrono::seconds(2));

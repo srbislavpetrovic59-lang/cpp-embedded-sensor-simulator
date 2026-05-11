@@ -139,25 +139,25 @@ int main()
                 case PacketType::Temperature:
                     g_sensorData.temperature = parsed.value;
                     alarm.checkTemperature(parsed.value);
-                    database.insert(
+                  /*/  database.insert(
                         "TEMP",
-                        parsed.value);
+                        parsed.value);*/
                     break;
 
                 case PacketType::Pressure:
                     g_sensorData.pressure = parsed.value;
                     alarm.checkPressure(parsed.value);
-                    database.insert(
+                   /* database.insert(
                         "PRES",
-                        parsed.value);
+                        parsed.value);*/
                     break;
 
                 case PacketType::Humidity:
                     g_sensorData.humidity = parsed.value;
                     alarm.checkHumidity(parsed.value);
-                    database.insert(
+                    /*database.insert(
                         "HUM",
-                        parsed.value);
+                        parsed.value);*/
                     break;
 
                 default:

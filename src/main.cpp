@@ -40,7 +40,13 @@ int main()
     {
         safePrint("Config not found, using defaults");
     }
-    testStreamParser();
+    if (!g_database.open("telemetry.db"))
+    {
+        safePrint("Failed to open database");
+        return -1;
+    }
+
+     testStreamParser();
     // TCP server
     TcpServer server;
     g_tcpServer = &server;
