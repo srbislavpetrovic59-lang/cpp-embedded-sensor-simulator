@@ -13,6 +13,7 @@
 #include "protocol/BinaryProtocol.h"
 #include <iostream>
 #include "database/TelemetryDatabase.h"
+#include "ws/WebSocketServer.h"
 
 void debugPrint(const std::vector<uint8_t>& data)
 {
@@ -31,6 +32,15 @@ void runTemperatureSensor()
     {
         float value = sensor.read();
         g_database.insert("TEMP", value);
+        if (g_wsServer)
+        {
+            std::string json =
+                "{\"sensor\":\"TEMP\",\"value\":"
+                + std::to_string(value)
+                + "}";
+
+            g_wsServer->broadcast(json);
+        }
 
         auto packet = buildPacket(PacketType::Temperature, value);
 
@@ -53,6 +63,15 @@ void runPressureSensor() {
     {
         float value = sensor.read();
         g_database.insert("PRES", value);
+        if (g_wsServer)
+        {
+            std::string json =
+                "{\"sensor\":\"PRES\",\"value\":"
+                + std::to_string(value)
+                + "}";
+
+            g_wsServer->broadcast(json);
+        }
         auto packet = buildPacket(PacketType::Pressure, value);
         if (g_tcpServer)
             g_tcpServer->sendBinary(packet);
@@ -70,6 +89,15 @@ void runHumiditySensor() {
     {
         float value = sensor.read();
         g_database.insert("HUM", value);
+        if (g_wsServer)
+        {
+            std::string json =
+                "{\"sensor\":\"HUM\",\"value\":"
+                + std::to_string(value)
+                + "}";
+
+            g_wsServer->broadcast(json);
+        }
 
         auto packet = buildPacket(PacketType::Humidity, value);
         if (g_tcpServer)

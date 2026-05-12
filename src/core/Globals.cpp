@@ -5,6 +5,7 @@
 #include <csignal>
 #include <mutex>
 #include "config/Config.h"
+#include "ws/WebSocketServer.h"
 
 
 // Define the global variable with type and storage specifier
@@ -15,6 +16,7 @@ std::mutex coutMutex;
 TcpServer* g_tcpServer = nullptr;
 
 Config g_config;
+WebSocketServer* g_wsServer = nullptr;
 
 // thread-safe print
 void safePrint(const std::string& msg)

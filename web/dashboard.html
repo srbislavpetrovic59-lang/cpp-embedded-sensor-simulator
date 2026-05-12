@@ -200,7 +200,42 @@ async function updateHistoryChart()
 
 updateHistoryChart();
 
-setInterval(updateHistoryChart, 5000);
+        setInterval(updateHistoryChart, 5000);
+        const socket = new WebSocket("ws://127.0.0.1:8090");
+
+        socket.onopen = function () {
+            document.getElementById("status").innerText =
+                "Connected - WebSocket live data";
+        };
+
+        socket.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+
+            if (data.sensor === "TEMP") {
+                document.getElementById("temp").innerText =
+                    Number(data.value).toFixed(2);
+            }
+
+            if (data.sensor === "PRES") {
+                document.getElementById("pres").innerText =
+                    Number(data.value).toFixed(2);
+            }
+
+            if (data.sensor === "HUM") {
+                document.getElementById("hum").innerText =
+                    Number(data.value).toFixed(2);
+            }
+        };
+
+        socket.onerror = function () {
+            document.getElementById("status").innerText =
+                "WebSocket error";
+        };
+
+        socket.onclose = function () {
+            document.getElementById("status").innerText =
+                "WebSocket disconnected";
+        };
 
     </script>
 

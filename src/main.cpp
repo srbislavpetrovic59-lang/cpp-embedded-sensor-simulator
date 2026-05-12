@@ -7,6 +7,7 @@
 #include "config/Config.h"
 #include "protocol/StreamParser.h"
 #include "protocol/BinaryProtocol.h"
+#include "ws/WebSocketServer.h"
 
 #include "database/TelemetryDatabase.h"
 
@@ -56,7 +57,13 @@ int main()
         safePrint("Failed to start TCP server");
         return -1;
     }
-	
+    WebSocketServer wsServer;
+    g_wsServer = &wsServer;
+
+    std::thread wsThread([&wsServer]()
+        {
+            wsServer.start(8090);
+        });
 
     // pokreni threadove senzora
     std::thread t1(runTemperatureSensor);
@@ -73,6 +80,7 @@ int main()
     t3.join();
 
     server.stop();
+    wsThread.detach();
 
     safePrint("Shutting down...");
 

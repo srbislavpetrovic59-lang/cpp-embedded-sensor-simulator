@@ -6,6 +6,10 @@
 #include "config/Config.h"
 #include "database/TelemetryDatabase.h"
 
+class WebSocketServer;
+
+extern WebSocketServer* g_wsServer;
+
 extern TelemetryDatabase g_database;
 class TcpServer;
 
