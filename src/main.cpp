@@ -8,6 +8,7 @@
 #include "protocol/StreamParser.h"
 #include "protocol/BinaryProtocol.h"
 #include "ws/WebSocketServer.h"
+#include "rest/RestServer.h"
 
 #include "database/TelemetryDatabase.h"
 
@@ -57,6 +58,12 @@ int main()
         safePrint("Failed to start TCP server");
         return -1;
     }
+    RestServer restServer;
+
+    std::thread restThread([&]()
+        {
+            restServer.start(8080, g_database);
+        });
     WebSocketServer wsServer;
     g_wsServer = &wsServer;
 
@@ -81,6 +88,7 @@ int main()
 
     server.stop();
     wsThread.detach();
+    restThread.detach();
 
     safePrint("Shutting down...");
 

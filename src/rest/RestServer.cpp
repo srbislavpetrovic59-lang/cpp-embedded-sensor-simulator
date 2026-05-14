@@ -11,6 +11,10 @@
 void RestServer::start(int port, TelemetryDatabase& database)
 {
     httplib::Server svr;
+    svr.set_mount_point(
+        "/",
+        "C:/Vezbe/EmbeddedSimulator/web"
+    );
 
     svr.Get("/status",
         [](const httplib::Request&,

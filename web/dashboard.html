@@ -68,56 +68,16 @@
     <canvas id="historyChart" width="900" height="300"></canvas>
     <script>
 
-        async function updateData() {
+       /* async function updateData() {
             try {
-                const response =
-                    await fetch("http://127.0.0.1:8080/latest");
-
-                const data = await response.json();
-                console.log(data);
-
-                document.getElementById("temp").innerText =
-                    Number(data.temperature).toFixed(2);
-
-                document.getElementById("pres").innerText =
-                    Number(data.pressure).toFixed(2);
-
-                document.getElementById("hum").innerText =
-                    Number(data.humidity).toFixed(2);
-
-                document.getElementById("status").innerText =
-                    "Connected - live data";
-
-                // alarms
-
-                document.getElementById("tempCard")
-                    .classList.toggle(
-                        "alarm",
-                        data.temperature > 30
-                    );
-
-                document.getElementById("presCard")
-                    .classList.toggle(
-                        "alarm",
-                        data.pressure > 1020
-                    );
-
-                document.getElementById("humCard")
-                    .classList.toggle(
-                        "alarm",
-                        data.humidity > 70
-                    );
+                ...
             }
             catch (err) {
-                document.getElementById("status").innerText =
-                    "Disconnected - REST server not reachable";
-                console.log(err);
+               ...
             }
-        }
+        }*/
 
-        setInterval(updateData, 1000);
-
-        updateData();
+       
         let historyChart;
 
 async function updateHistoryChart()
