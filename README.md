@@ -1,53 +1,121 @@
 # Embedded Sensor Simulator
 Current Release: v4.0
-## Architecture
-Multi-threaded embedded telemetry simulator written in modern C++.
+# Architecture
 
-The project simulates real-time sensor devices, streams binary telemetry data over TCP, supports multiple monitoring clients, logs telemetry to CSV, exposes a REST API, and provides live visualization using Python. 
+## Overview
 
-![Architecture](docs/architecture.png)
+EmbeddedSensorSimulator is a C++ telemetry platform that simulates embedded sensor devices and exposes data through multiple channels:
 
-
-# Features
-## Embedded Sensor Simulation
-
-- Temperature sensor
-- Pressure sensor
-- Humidity sensor
-- Configurable update intervals
-
-## TCP Networking
-
-- TCP telemetry server
-- Multi-client support
-- Real-time binary streaming
-- Concurrent client handling
-
-## Binary Protocol
-
-Custom lightweight binary protocol:
-
-- Packet header
-- Packet type
-- Float payload
-- Stream parser
-- TCP-safe packet reconstruction
-## Monitoring Client
-
-Client application supports:
-
-- Real-time packet decoding
-- Live telemetry monitoring
+- TCP binary telemetry stream
+- WebSocket live telemetry
+- REST API
+- SQLite historical storage
+- Web dashboard
 - CSV logging
-- Alarm system
+- Alarm monitoring
 
-## Alarm System
+## High-Level Flow
 
-Threshold-based warnings:
-- High temperature
-- High pressure
-- High humidity
+```text
+Sensor Threads
+   |
+   v
+Binary Protocol Encoder
+   |
+   v
+TCP Telemetry Server
+   |
+   +--> TCP Client Parser
+   |       |
+   |       +--> CSV Logger
+   |       +--> Alarm System
+   |       +--> SQLite Database
+   |
+   +--> WebSocket Live Stream
+           |
+           v
+        Web Dashboard
 
+
+SQLite Database
+   |
+   v
+REST API
+   |
+   +--> /latest
+   +--> /history
+   |
+   v
+Web Dashboard Charts
+```
+## Main Components
+## Sensor Simulator
+
+# Generates simulated telemetry values:
+
+Temperature
+Pressure
+Humidity
+
+Each sensor runs periodically and produces real-time values.
+
+# Binary Protocol
+
+Sensor data is encoded into compact binary packets.
+
+## Responsibilities:
+
+packet creation
+packet type identification
+payload encoding
+stream-safe parsing
+TCP Server
+
+Streams binary telemetry packets to connected clients.
+
+# Features:
+
+multi-client support
+real-time broadcasting
+client disconnect handling
+TCP Client Parser
+
+Receives binary packets from the TCP server and decodes them into structured telemetry data.
+
+## Responsibilities:
+
+receive TCP stream
+reconstruct packets
+parse sensor type and value
+forward data to logger, alarm system and storage
+SQLite Storage
+
+Stores historical telemetry records.
+
+Used by:
+
+REST /history
+dashboard history chart
+REST API
+
+Provides HTTP access to telemetry data.
+
+Endpoints:
+```text
+GET /status
+GET /latest
+GET /history
+```
+## WebSocket Stream
+Provides real-time telemetry updates to the web dashboard without polling.
+## Web Dashboard
+Displays:
+```text
+latest sensor values
+live status
+history chart
+alarm indicators
+```
 ## REST API
 HTTP API for latest sensor values.
 **Endpoints**
@@ -128,21 +196,15 @@ Run:
 
 **Run one or more:**
 ClientApp.exe
-
 ## Bash
-- python -m http.server 3000
-- http://localhost:3000/dashboard.html
+- http://localhost:8080/dashboard.html
 
 ## REST API
 Open browser:
 
 - http://localhost:8080/status
 - http://localhost:8080/latest
-
-## Python Live Graph
-python plot.py
-<img width="637" height="552" alt="image" src="https://github.com/user-attachments/assets/1d315187-eb50-4846-87f5-643f62c3b46e" />
-
+- http://localhost:8080/history
 
 ## Example Console Output
 - TEMP: 24.81
@@ -152,7 +214,7 @@ python plot.py
 ## Future Improvements
 - [x] Web dashboard
 - [x] SQLite telemetry storage
-- [ ] WebSocket streaming
+- [x] WebSocket streaming
 - [ ] Unreal Engine visualization
 - [ ] Authentication
 - [ ] Docker deployment 
