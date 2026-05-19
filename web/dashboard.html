@@ -64,108 +64,130 @@
         </div>
 
     </div>
+    
     <p id="status">Connecting...</p>
     <canvas id="historyChart" width="900" height="300"></canvas>
     <script>
 
-       /* async function updateData() {
-            try {
-                ...
-            }
-            catch (err) {
-               ...
-            }
-        }*/
-
        
         let historyChart;
+       async function checkStatus() {
+            try {
+                const response =
+                    await fetch(
+                        "http://127.0.0.1:8080/status"
+                    );
 
-async function updateHistoryChart()
-{
-    console.log("Chart object:", typeof Chart);
-    try
-    {
-        const response =
-            await fetch("http://127.0.0.1:8080/history");
+                if (response.ok) {
+                    const status =
+                        document.getElementById(
+                            "connectionStatus"
+                        );
 
-        const history = await response.json();
+                    status.innerText =
+                        "🟢 ONLINE";
 
-        const tempData = [];
-        const humData = [];
-        const presData = [];
-        const labels = [];
-
-        history.reverse();
-
-        history.forEach(item =>
-        {
-            labels.push(item.timestamp);
-
-            if (item.sensor === "TEMP")
-                tempData.push(item.value);
-            else
-                tempData.push(null);
-
-            if (item.sensor === "HUM")
-                humData.push(item.value);
-            else
-                humData.push(null);
-
-            if (item.sensor === "PRES")
-                presData.push(item.value);
-            else
-                presData.push(null);
-        });
-
-        const ctx =
-            document.getElementById("historyChart");
-
-        if (historyChart)
-            historyChart.destroy();
-
-        historyChart = new Chart(ctx,
-        {
-            type: "line",
-
-            data:
-            {
-                labels: labels,
-
-                datasets:
-                [
-                    {
-                        label: "Temperature",
-                        data: tempData,
-                        spanGaps: true
-                    },
-                    {
-                        label: "Pressure",
-                        data: presData,
-                        spanGaps: true
-                    },
-                    {
-                        label: "Humidity",
-                        data: humData,
-                        spanGaps: true
-                    }
-                ]
+                    status.style.color =
+                        "lightgreen";
+                }
             }
-        });
-    }
-    catch(err)
-    {
-        console.log(err);
-    }
-}
+            catch
+            {
+                const status =
+                    document.getElementById(
+                        "connectionStatus"
+                    );
 
-updateHistoryChart();
+                status.innerText =
+                    "🔴 OFFLINE";
+
+                status.style.color =
+                    "red";
+            }
+        }
+        async function updateHistoryChart() {
+            console.log("Chart object:", typeof Chart);
+            try {
+                const response =
+                    await fetch("http://127.0.0.1:8080/history");
+
+                const history = await response.json();
+
+                const tempData = [];
+                const humData = [];
+                const presData = [];
+                const labels = [];
+
+                history.reverse();
+
+                history.forEach(item => {
+                    labels.push(item.timestamp);
+
+                    if (item.sensor === "TEMP")
+                        tempData.push(item.value);
+                    else
+                        tempData.push(null);
+
+                    if (item.sensor === "HUM")
+                        humData.push(item.value);
+                    else
+                        humData.push(null);
+
+                    if (item.sensor === "PRES")
+                        presData.push(item.value);
+                    else
+                        presData.push(null);
+                });
+
+                const ctx =
+                    document.getElementById("historyChart");
+
+                if (historyChart)
+                    historyChart.destroy();
+
+                historyChart = new Chart(ctx,
+                    {
+                        type: "line",
+
+                        data:
+                        {
+                            labels: labels,
+
+                            datasets:
+                                [
+                                    {
+                                        label: "Temperature",
+                                        data: tempData,
+                                        spanGaps: true
+                                    },
+                                    {
+                                        label: "Pressure",
+                                        data: presData,
+                                        spanGaps: true
+                                    },
+                                    {
+                                        label: "Humidity",
+                                        data: humData,
+                                        spanGaps: true
+                                    }
+                                ]
+                        }
+                    });
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+
+        updateHistoryChart();
 
         setInterval(updateHistoryChart, 5000);
         const socket = new WebSocket("ws://127.0.0.1:8090");
 
         socket.onopen = function () {
             document.getElementById("status").innerText =
-                "Connected - WebSocket live data";
+            // "Connected - WebSocket live data";
+                "🟢 REAL-TIME TELEMETRY";
         };
 
         socket.onmessage = function (event) {
@@ -189,14 +211,16 @@ updateHistoryChart();
 
         socket.onerror = function () {
             document.getElementById("status").innerText =
-                "WebSocket error";
+                "🟠 REST MODE";
         };
 
         socket.onclose = function () {
             document.getElementById("status").innerText =
-                "WebSocket disconnected";
+                "🔴 OFFLINE";
         };
+        setInterval(checkStatus, 2000);
 
+        checkStatus();
     </script>
 
 </body>
