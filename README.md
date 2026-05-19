@@ -1,5 +1,5 @@
 # Embedded Sensor Simulator
-Current Release: v4.0
+Current Release: v5.0
 # Architecture
 
 ## Overview
