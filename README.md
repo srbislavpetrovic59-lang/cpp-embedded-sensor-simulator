@@ -48,10 +48,10 @@ REST API
    v
 Web Dashboard Charts
 ```
-## Main Components
+# Main Components
 ## Sensor Simulator
 
-# Generates simulated telemetry values:
+## Generates simulated telemetry values:
 
 Temperature
 Pressure
@@ -59,7 +59,7 @@ Humidity
 
 Each sensor runs periodically and produces real-time values.
 
-# Binary Protocol
+## Binary Protocol
 
 Sensor data is encoded into compact binary packets.
 
@@ -73,7 +73,7 @@ TCP Server
 
 Streams binary telemetry packets to connected clients.
 
-# Features:
+## Features:
 
 multi-client support
 real-time broadcasting
