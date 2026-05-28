@@ -225,6 +225,23 @@ Open browser:
 ## SQlite telemetry
 ![Dashboard](docs/telemetry.png)‎
 
+## Cross-platform support
+
+Successfuly tested on:
+ - Windows
+ - Ubuntu 22.04 Linux
+
+ ### Linux build
+
+ ```bash
+ mkdir build
+ cd build
+ cmake ..
+ make
+ ./ServerApp
+ ```
+
+
 ## Author  
 
 Srbislav Petrovic
