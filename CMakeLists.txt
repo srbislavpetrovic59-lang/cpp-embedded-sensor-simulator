@@ -13,19 +13,19 @@ add_compile_definitions(
 )
 
 # Client
-add_executable(ClientApp    
-    src/client/main.cpp
-    src/protocol/BinaryProtocol.cpp
-    src/protocol/StreamParser.cpp
-    src/database/TelemetryDatabase.cpp
- "include/client/CsvLogger.h" "src/client/CsvLogger.cpp" "src/client/AlarmSystem.cpp" "include/client/AlarmSystem.h" "include/rest/SensorData.h" "src/rest/SensorData.cpp"
- "include/rest/RestServer.h" "src/rest/RestServer.cpp"  "third_party/sqlite/sqlite3.c" "third_party/sqlite/sqlite3.h" )
+#add_executable(ClientApp    
+#    src/client/main.cpp
+#   src/protocol/BinaryProtocol.cpp
+#    src/protocol/StreamParser.cpp
+#    src/database/TelemetryDatabase.cpp
+# "include/client/CsvLogger.h" "src/client/CsvLogger.cpp" "src/client/AlarmSystem.cpp" "include/client/AlarmSystem.h" "include/rest/SensorData.h" "src/rest/SensorData.cpp"
+# "include/rest/RestServer.h" "src/rest/RestServer.cpp"  "third_party/sqlite/sqlite3.c" "third_party/sqlite/sqlite3.h" )
 
 
-target_include_directories(ClientApp PRIVATE
-    third_party
-
-)
+#target_include_directories(ClientApp PRIVATE
+#    third_party
+#
+#)
 
 
 # Server (bez client main)

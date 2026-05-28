@@ -1,4 +1,5 @@
 ﻿#include "protocol/StreamParser.h"
+#include <cstddef>
 
 bool StreamParser::inputByte(uint8_t byte, ParsedPacket& out)
 {
@@ -20,7 +21,7 @@ bool StreamParser::tryParse(ParsedPacket& out)
 
     uint8_t len = buffer[2];
 
-    size_t expectedSize = 3 + len + 1;
+    std::size_t expectedSize = 3 + len + 1;
 
     if (buffer.size() < expectedSize)
         return false;

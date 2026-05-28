@@ -20,10 +20,14 @@ TcpServer::~TcpServer()
 
 bool TcpServer::start(int port)
 {
+    #ifdef _WIN32
     WSADATA wsa;
 
-    WSAStartup(MAKEWORD(2, 2), &wsa);
-
+    if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
+    {
+        return false;
+    }
+    #endif
     serverSocket =
         socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
@@ -95,15 +99,20 @@ void TcpServer::sendMessage(const std::string& message)
 }
 
 bool TcpServer::initializeSockets()
-{
-    WSADATA wsaData;
-
-    return WSAStartup(MAKEWORD(2, 2), &wsaData) == 0;
+{   
+    #ifdef _WIN32
+        WSADATA wsaData;
+        return WSAStartup(MAKEWORD(2, 2), &wsaData) == 0;
+    #else
+        return true;
+    #endif
 }
 
 void TcpServer::cleanupSockets()
 {
-    WSACleanup();
+    #ifdef _WIN32
+        WSACleanup();
+     #endif   
 }
 
 bool TcpServer::createListenSocket(int port)
@@ -172,7 +181,11 @@ void TcpServer::closeClient()
 {
     if (clientSocket != INVALID_SOCKET)
     {
+        #ifdef _WIN32
         closesocket(clientSocket);
+        #else
+        close(clientSocket);
+        #endif
         clientSocket = INVALID_SOCKET;
     }
 
@@ -183,7 +196,11 @@ void TcpServer::closeServer()
 {
     if (listenSocket != INVALID_SOCKET)
     {
+        #ifdef _WIN32
         closesocket(listenSocket);
+        #else
+        close(listenSocket);
+        #endif
         listenSocket = INVALID_SOCKET;
     }
 }
@@ -206,7 +223,11 @@ void TcpServer::sendBinary(
 
         if (result == SOCKET_ERROR)
         {
+            #ifdef _WIN32
             closesocket(*it);
+            #else
+            close(*it);
+            #endif
 
             it = clients.erase(it);
 

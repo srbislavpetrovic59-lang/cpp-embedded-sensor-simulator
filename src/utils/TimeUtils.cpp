@@ -18,7 +18,11 @@ std::string getTimestamp()
         system_clock::to_time_t(now);
 
     std::tm localTime{};
-    localtime_s(&localTime, &timeNow);
+    #ifdef _WIN32
+        localtime_s(&localTime, &timeNow);
+    #else
+        localtime_r(&timeNow, &localTime);
+    #endif
 
     std::ostringstream oss;
 
