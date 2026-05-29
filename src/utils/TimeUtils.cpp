@@ -22,7 +22,7 @@ std::string getTimestamp()
         localtime_s(&localTime, &timeNow);
     #else
         localtime_r(&timeNow, &localTime);
-    #endif
+    #endif    
 
     std::ostringstream oss;
 

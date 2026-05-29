@@ -7,6 +7,7 @@
 #include <iostream>
 #include <sstream>
 #include "database/TelemetryDatabase.h"
+#include "utils/TimeUtils.h"
 
 void RestServer::start(int port, TelemetryDatabase& database)
 {
@@ -48,8 +49,10 @@ void RestServer::start(int port, TelemetryDatabase& database)
                 << g_sensorData.pressure << ",";
 
             json << "\"humidity\": "
-                << g_sensorData.humidity;
+                << g_sensorData.humidity << ", ";
 
+            json << "\"timestamp\": \""
+                << getTimestamp() << "\"";
             json << "}";
 
             res.set_content(

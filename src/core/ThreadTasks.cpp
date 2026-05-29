@@ -14,6 +14,7 @@
 #include <iostream>
 #include "database/TelemetryDatabase.h"
 #include "ws/WebSocketServer.h"
+#include "rest/SensorData.h"
 
 void debugPrint(const std::vector<uint8_t>& data)
 {
@@ -47,7 +48,8 @@ void runTemperatureSensor()
         if (g_tcpServer)
             g_tcpServer->sendBinary(packet);
         std::cout << "TEMP: " << value << std::endl;
-
+        g_sensorData.temperature = value;
+        
         std::this_thread::sleep_for(
             std::chrono::milliseconds(g_config.tempIntervalMs));
         for (auto b : packet)
@@ -76,6 +78,8 @@ void runPressureSensor() {
         if (g_tcpServer)
             g_tcpServer->sendBinary(packet);
         std::cout << "PRES: " << value << std::endl;
+        g_sensorData.pressure = value;
+
         std::this_thread::sleep_for(std::chrono::milliseconds(1500));
         for (auto b : packet)
             printf("%02X ", b);
@@ -104,6 +108,7 @@ void runHumiditySensor() {
             g_tcpServer->sendBinary(packet);
 
         std::cout << "HUM:  " << value << std::endl;
+        g_sensorData.humidity = value;
         std::this_thread::sleep_for(std::chrono::seconds(2));
         for (auto b : packet)
             printf("%02X ", b);
