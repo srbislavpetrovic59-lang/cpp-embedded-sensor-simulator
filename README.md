@@ -219,6 +219,18 @@ Open browser:
 - [ ] Authentication
 - [ ] Docker deployment 
 
+## Unreal Engine integration plan
+The simulator exposes REST endpoints for real-time telemetry:
+
+- `/latest` - latest TEMP/PRES/HUM values
+- `/history` - historical telemetry records
+
+Planned Unreal integration:
+- HTTP GET every 1 second
+- parse JSON
+- display values in 3D dashboard
+- later WebSocket/TCP live streaming
+
 ## Dashboard
 ![Dashboard](docs/dashboard.png)‎
 
