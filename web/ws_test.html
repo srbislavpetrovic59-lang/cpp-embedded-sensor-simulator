@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Test</title>
+</head>
+<body>
+    <h2>Sensor WebSocket Test</h2>
+    <pre id="log"></pre>
+
+    <script>
+        const log = document.getElementById("log");
+
+        function add(msg) {
+            log.textContent += msg + "\n";
+        }
+
+        const ws = new WebSocket("ws://localhost:8090");
+
+        ws.onopen = () => {
+            add("CONNECTED");
+        };
+
+        ws.onmessage = (event) => {
+            add(event.data);
+        };
+
+        ws.onerror = (err) => {
+            add("ERROR");
+            console.log(err);
+        };
+
+        ws.onclose = () => {
+            add("CLOSED");
+        };
+    </script>
+</body>
+</html>

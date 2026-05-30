@@ -33,14 +33,18 @@ void runTemperatureSensor()
     {
         float value = sensor.read();
         g_database.insert("TEMP", value);
+        g_sensorData.temperature = value;
+        
         if (g_wsServer)
         {
-            std::string json =
-                "{\"sensor\":\"TEMP\",\"value\":"
-                + std::to_string(value)
-                + "}";
+                std::string json =
+            "{"
+            "\"temperature\":" + std::to_string(g_sensorData.temperature) + ","
+            "\"pressure\":" + std::to_string(g_sensorData.pressure) + ","
+            "\"humidity\":" + std::to_string(g_sensorData.humidity) +
+            "}";
 
-            g_wsServer->broadcast(json);
+        g_wsServer->broadcast(json);
         }
 
         auto packet = buildPacket(PacketType::Temperature, value);
@@ -48,7 +52,7 @@ void runTemperatureSensor()
         if (g_tcpServer)
             g_tcpServer->sendBinary(packet);
         std::cout << "TEMP: " << value << std::endl;
-        g_sensorData.temperature = value;
+        
         
         std::this_thread::sleep_for(
             std::chrono::milliseconds(g_config.tempIntervalMs));
@@ -65,15 +69,20 @@ void runPressureSensor() {
     {
         float value = sensor.read();
         g_database.insert("PRES", value);
+        g_sensorData.pressure = value;
+        
         if (g_wsServer)
         {
             std::string json =
-                "{\"sensor\":\"PRES\",\"value\":"
-                + std::to_string(value)
-                + "}";
+                "{"
+                "\"temperature\":" + std::to_string(g_sensorData.temperature) + ","
+                "\"pressure\":" + std::to_string(g_sensorData.pressure) + ","
+                "\"humidity\":" + std::to_string(g_sensorData.humidity) +
+                "}";
 
             g_wsServer->broadcast(json);
         }
+       
         auto packet = buildPacket(PacketType::Pressure, value);
         if (g_tcpServer)
             g_tcpServer->sendBinary(packet);
@@ -93,12 +102,16 @@ void runHumiditySensor() {
     {
         float value = sensor.read();
         g_database.insert("HUM", value);
-        if (g_wsServer)
+        g_sensorData.humidity = value;
+
+       if (g_wsServer)
         {
             std::string json =
-                "{\"sensor\":\"HUM\",\"value\":"
-                + std::to_string(value)
-                + "}";
+                "{"
+                "\"temperature\":" + std::to_string(g_sensorData.temperature) + ","
+                "\"pressure\":" + std::to_string(g_sensorData.pressure) + ","
+                "\"humidity\":" + std::to_string(g_sensorData.humidity) +
+                "}";
 
             g_wsServer->broadcast(json);
         }
@@ -108,7 +121,7 @@ void runHumiditySensor() {
             g_tcpServer->sendBinary(packet);
 
         std::cout << "HUM:  " << value << std::endl;
-        g_sensorData.humidity = value;
+        
         std::this_thread::sleep_for(std::chrono::seconds(2));
         for (auto b : packet)
             printf("%02X ", b);
