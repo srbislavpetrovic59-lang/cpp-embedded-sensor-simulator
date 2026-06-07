@@ -13,6 +13,9 @@ EmbeddedSensorSimulator is a C++ telemetry platform that simulates embedded sens
 - Web dashboard
 - CSV logging
 - Alarm monitoring
+- Integrated real BME280 sensor via Raspberry Pi 4B
+- Added live physical telemetry mode
+- BME280 data is sent to the C++ telemetry server and broadcast to dashboard via WebSocket
 
 ## High-Level Flow
 
@@ -82,6 +85,8 @@ TCP Client Parser
 
 Receives binary packets from the TCP server and decodes them into structured telemetry data.
 
+
+
 ## Responsibilities:
 
 receive TCP stream
@@ -124,6 +129,7 @@ GET /status
 **Response:**
 REST server running
 
+
 **Latest Sensor Values**
 GET /latest
 
@@ -136,6 +142,8 @@ GET /latest
 }
 ```
 ---
+
+
 ## Project Structure
 ```text
 EmbeddedSensorSimulator/
@@ -182,7 +190,6 @@ EmbeddedSensorSimulator/
 git clone <repo_url>
 cd EmbeddedSensorSimulator
 ```
-Open project in Visual Studio and build using CMake.
 
 ## Running
 **Start Server**
