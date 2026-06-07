@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
 
     <title>Telemetry Dashboard</title>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <style>
         body {
             font-family: Arial;
@@ -39,13 +41,23 @@
         .alarm {
             border: 3px solid red;
         }
+        .status {
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .live {
+            color: lightgreen;
+        }
     </style>
 </head>
+
 
 <body>
 
     <h1>Embedded Telemetry Dashboard</h1>
-
+    
     <div class="container">
 
         <div class="card" id="tempCard">
@@ -64,14 +76,20 @@
         </div>
 
     </div>
+
+    <div id="status" class="status live">
+        Connecting...
+    </div>
     
-    <p id="status">Connecting...</p>
+    <div id="sensorMode" class="status live">
+    🟢 LIVE SENSOR MODE: BME280 / Raspberry Pi
+</div>
     <canvas id="historyChart" width="900" height="300"></canvas>
     <script>
 
-       
+
         let historyChart;
-       async function checkStatus() {
+        async function checkStatus() {
             try {
                 const response =
                     await fetch(
@@ -81,7 +99,7 @@
                 if (response.ok) {
                     const status =
                         document.getElementById(
-                            "connectionStatus"
+                            "status"
                         );
 
                     status.innerText =
@@ -95,7 +113,7 @@
             {
                 const status =
                     document.getElementById(
-                        "connectionStatus"
+                        "status"
                     );
 
                 status.innerText =
@@ -186,7 +204,7 @@
 
         socket.onopen = function () {
             document.getElementById("status").innerText =
-            // "Connected - WebSocket live data";
+                // "Connected - WebSocket live data";
                 "🟢 REAL-TIME TELEMETRY";
         };
 
@@ -221,6 +239,31 @@
         setInterval(checkStatus, 2000);
 
         checkStatus();
+
+        async function updateLatest() {
+            try {
+                const response =
+                    await fetch("http://127.0.0.1:8080/latest");
+
+                const data = await response.json();
+
+                document.getElementById("temp").innerText =
+                    Number(data.temperature).toFixed(2);
+
+                document.getElementById("pres").innerText =
+                    Number(data.pressure).toFixed(2);
+
+                document.getElementById("hum").innerText =
+                    Number(data.humidity).toFixed(2);
+
+            }
+            catch (err) {
+                document.getElementById("status").innerText =
+                    "🔴 OFFLINE";
+            }
+        }
+        setInterval(updateLatest, 2000);
+        updateLatest();
     </script>
 
 </body>

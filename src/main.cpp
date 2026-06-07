@@ -73,18 +73,18 @@ int main()
         });
 
     // pokreni threadove senzora
-    std::thread t1(runTemperatureSensor);
+ /*   std::thread t1(runTemperatureSensor);
     std::thread t2(runPressureSensor);
     std::thread t3(runHumiditySensor);
-
+    */
     // čekaj exit (Ctrl+C ili ENTER)
     std::cin.get();
 
     running = false;
 
-    t1.join();
+   /* t1.join();
     t2.join();
-    t3.join();
+    t3.join();*/
 
     server.stop();
     wsThread.detach();

@@ -7,6 +7,8 @@
 #include <iostream>
 #include <sstream>
 #include "database/TelemetryDatabase.h"
+#include "core/Globals.h"
+#include "ws/WebSocketServer.h"
 
 void RestServer::start(int port, TelemetryDatabase& database)
 {
@@ -73,6 +75,73 @@ void RestServer::start(int port, TelemetryDatabase& database)
             res.set_content(
                 json,
                 "application/json"
+            );
+        });
+    svr.Post("/update",
+        [](const httplib::Request& req,
+            httplib::Response& res)
+        {
+            std::string body = req.body;
+
+            auto getValue = [&](const std::string& key) -> float
+                {
+                    size_t pos = body.find(key);
+                    if (pos == std::string::npos) return 0.0f;
+
+                    pos = body.find(":", pos);
+                    size_t end = body.find_first_of(",}", pos);
+
+                    return std::stof(
+                        body.substr(pos + 1, end - pos - 1)
+                    );
+                };
+
+            g_sensorData.temperature =
+                getValue("temperature");
+
+            g_sensorData.pressure =
+                getValue("pressure");
+
+            g_sensorData.humidity =
+                getValue("humidity");
+
+            if (g_wsServer)
+            {
+                g_wsServer->broadcast(
+                    "{\"sensor\":\"TEMP\",\"value\":" +
+                    std::to_string(g_sensorData.temperature) +
+                    "}"
+                );
+
+                g_wsServer->broadcast(
+                    "{\"sensor\":\"PRES\",\"value\":" +
+                    std::to_string(g_sensorData.pressure) +
+                    "}"
+                );
+
+                g_wsServer->broadcast(
+                    "{\"sensor\":\"HUM\",\"value\":" +
+                    std::to_string(g_sensorData.humidity) +
+                    "}"
+                );
+            }
+
+            std::cout
+                << "BME280 update: "
+                << "TEMP=" << g_sensorData.temperature
+                << " PRES=" << g_sensorData.pressure
+                << " HUM=" << g_sensorData.humidity
+                << std::endl;
+
+
+            res.set_header(
+                "Access-Control-Allow-Origin",
+                "*"
+            );
+
+            res.set_content(
+                "OK",
+                "text/plain"
             );
         });
     std::cout
