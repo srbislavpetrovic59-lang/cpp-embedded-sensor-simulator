@@ -16,6 +16,7 @@ EmbeddedSensorSimulator is a C++ telemetry platform that simulates embedded sens
 - Integrated real BME280 sensor via Raspberry Pi 4B
 - Added live physical telemetry mode
 - BME280 data is sent to the C++ telemetry server and broadcast to dashboard via WebSocket
+- Unreal Engine scene reacts in real time to BME280 temperature changes.
 
 ## High-Level Flow
 
