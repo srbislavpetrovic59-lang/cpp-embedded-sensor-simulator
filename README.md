@@ -235,7 +235,7 @@ Open browser:
 - [x] Web dashboard
 - [x] SQLite telemetry storage
 - [x] WebSocket streaming
-- [ ] Unreal Engine visualization
+- [x] Unreal Engine visualization
 - [ ] Authentication
 - [ ] Docker deployment 
 
