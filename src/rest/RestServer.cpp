@@ -78,7 +78,7 @@ void RestServer::start(int port, TelemetryDatabase& database)
             );
         });
     svr.Post("/update",
-        [](const httplib::Request& req,
+        [&](const httplib::Request& req,
             httplib::Response& res)
         {
             std::string body = req.body;
@@ -104,6 +104,18 @@ void RestServer::start(int port, TelemetryDatabase& database)
 
             g_sensorData.humidity =
                 getValue("humidity");
+           
+            database.insert(
+                "TEMP",
+                g_sensorData.temperature);
+
+            database.insert(
+                "PRES",
+                g_sensorData.pressure);
+
+            database.insert(
+                "HUM",
+                g_sensorData.humidity);
 
             if (g_wsServer)
             {

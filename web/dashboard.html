@@ -204,8 +204,10 @@
 
         socket.onopen = function () {
             document.getElementById("status").innerText =
-                // "Connected - WebSocket live data";
-                "🟢 REAL-TIME TELEMETRY";
+                "🟢 LIVE BME280 STREAM";
+
+            document.getElementById("status")
+                .style.color = "lightgreen";
         };
 
         socket.onmessage = function (event) {
@@ -234,11 +236,14 @@
 
         socket.onclose = function () {
             document.getElementById("status").innerText =
-                "🔴 OFFLINE";
-        };
-        setInterval(checkStatus, 2000);
+                "🔴 SENSOR DISCONNECTED";
 
-        checkStatus();
+            document.getElementById("status")
+                .style.color = "red";
+        };
+       // setInterval(checkStatus, 2000);
+
+       // checkStatus();
 
         async function updateLatest() {
             try {
@@ -262,8 +267,8 @@
                     "🔴 OFFLINE";
             }
         }
-        setInterval(updateLatest, 2000);
-        updateLatest();
+       // setInterval(updateLatest, 2000);
+       // updateLatest();
     </script>
 
 </body>

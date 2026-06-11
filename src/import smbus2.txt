@@ -1,0 +1,28 @@
+import smbus2
+import bme280
+import time
+import requests
+
+port = 1
+address = 0x76
+SERVER_URL = "http://192.168.1.24:8080/update"
+
+
+bus = smbus2.SMBus(port)
+calibration_params = bme280.load_calibration_params(bus, address)
+
+while True:
+    data = bme280.sammple(bus, address, calibration_params)
+    payload = {
+        "temperature": round(data, temperature, 2),
+        "pressure": round(data, pressure, 2), 
+        "humidity": round(data, humidity, 2)
+    }
+    print(payload)
+
+    try:
+        requests.post(SERVER_URL, json=payload)
+    except Exception as e:
+        print("Send error:", e)
+
+    time.sleep(2)
