@@ -191,6 +191,7 @@ EmbeddedSensorSimulator/
 - JSON
 - Python
 - matplotlib
+- Unreal Engine 5.7.1
 ## Build
 
 **Requirements**
