@@ -13,6 +13,10 @@ EmbeddedSensorSimulator is a C++ telemetry platform that simulates embedded sens
 - Web dashboard
 - CSV logging
 - Alarm monitoring
+- Integrated real BME280 sensor via Raspberry Pi 4B
+- Added live physical telemetry mode
+- BME280 data is sent to the C++ telemetry server and broadcast to dashboard via WebSocket
+- Unreal Engine scene reacts in real time to BME280 temperature changes.
 
 ## High-Level Flow
 
@@ -82,6 +86,8 @@ TCP Client Parser
 
 Receives binary packets from the TCP server and decodes them into structured telemetry data.
 
+
+
 ## Responsibilities:
 
 receive TCP stream
@@ -124,6 +130,7 @@ GET /status
 **Response:**
 REST server running
 
+
 **Latest Sensor Values**
 GET /latest
 
@@ -136,6 +143,20 @@ GET /latest
 }
 ```
 ---
+## Live Unreal Engine Integration
+
+The Unreal Engine scene reacts in real time to physical sensor data from a Raspberry Pi + BME280 sensor.
+
+Current features:
+- Live temperature, pressure and humidity streaming
+- REST API integration with Unreal Engine C++
+- Dynamic scene reaction based on temperature
+- Real-time light color/intensity changes
+
+Example:
+- >30°C → warm/yellow lighting
+- >32°C → strong red warning lighting
+![Dashboard](docs/UE.png)‎
 ## Project Structure
 ```text
 EmbeddedSensorSimulator/
@@ -182,7 +203,6 @@ EmbeddedSensorSimulator/
 git clone <repo_url>
 cd EmbeddedSensorSimulator
 ```
-Open project in Visual Studio and build using CMake.
 
 ## Running
 **Start Server**
@@ -215,7 +235,7 @@ Open browser:
 - [x] Web dashboard
 - [x] SQLite telemetry storage
 - [x] WebSocket streaming
-- [ ] Unreal Engine visualization
+- [x] Unreal Engine visualization
 - [ ] Authentication
 - [ ] Docker deployment 
 
