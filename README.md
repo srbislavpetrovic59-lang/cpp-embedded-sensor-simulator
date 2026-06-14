@@ -156,7 +156,7 @@ Current features:
 Example:
 - >30°C → warm/yellow lighting
 - >32°C → strong red warning lighting
-![Dashboard](docs/UE.png)‎
+![Dashboard](docs/UE(2).png)‎
 ## Project Structure
 ```text
 EmbeddedSensorSimulator/
