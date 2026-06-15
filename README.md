@@ -146,17 +146,21 @@ GET /latest
 ## Live Unreal Engine Integration
 
 The Unreal Engine scene reacts in real time to physical sensor data from a Raspberry Pi + BME280 sensor.
-
+The virtual BME280 device displays live sensor data on a 3D OLED screen.  
+Temperature thresholds control LED indicators and scene lighting in real time.
 Current features:
 - Live temperature, pressure and humidity streaming
 - REST API integration with Unreal Engine C++
 - Dynamic scene reaction based on temperature
 - Real-time light color/intensity changes
-
+- Green LED: normal temperature
+- Yellow LED: warning range
+- Red LED: high temperature alarm
 Example:
 - >30°C → warm/yellow lighting
 - >32°C → strong red warning lighting
 ![Dashboard](docs/UE1.png)‎
+
 ## Project Structure
 ```text
 EmbeddedSensorSimulator/
