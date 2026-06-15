@@ -159,6 +159,7 @@ Current features:
 Example:
 - >30°C → warm/yellow lighting
 - >32°C → strong red warning lighting
+  
 ![Dashboard](docs/UE1.png)‎
 
 ## Project Structure
